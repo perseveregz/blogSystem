@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--保证与mapper接口的全类名一致-->
+<mapper namespace="com.gz.myblog.mapper.blogMapper">
+
+<!--    int getTotalBlogs(PageQueryUtil pageQueryUtil);-->
+    <select id="getTotalBlogs" parameterType="map" resultType="int">
+        select count(*) from tb_blog
+        where is_deleted=0
+        <if test="keyword!=null">
+            AND (blog_title like CONCAT('%',#{keyword},'%' ) or blog_category_name like CONCAT('%',#{keyword},'%' ))
+        </if>
+        <if test="blogStatus!=null">
+            AND blog_status = #{blogStatus}
+        </if>
+        <if test="blogCategoryId!=null">
+            AND blog_category_id = #{blogCategoryId}
+        </if>
+    </select>
+
+    <!--  使用resultMap自定义映射处理  -->
+    <!--
+        <resultMap id="empResultMap" type="Emp">
+            <id column="emp_id" property="empId"></id>
+            <result column="emp_name" property="empName"></result>
+            <result column="age" property="age"></result>
+            <result column="gender" property="gender"></result>
+        </resultMap>
+    
+        <select id="getEmpById" resultMap="empResultMap">
+            select * from t_emp where emp_id = #{empId}
+        </select>
+       -->
+
+</mapper>

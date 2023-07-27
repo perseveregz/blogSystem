@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--保证与mapper接口的全类名一致-->
+<mapper namespace="com.gz.myblog.mapper.UserMapper">
+
+    <sql id="Base_Column_list">
+        admin_user_id, login_user_name, login_password, nick_name, locked
+    </sql>
+
+    <resultMap id="BaseResultMap" type="com.gz.myblog.pojo.User">
+        <id column="admin_user_id" property="adminUserId"></id>
+        <result column="login_user_name" property="loginUserName"></result>
+        <result column="login_password" property="loginPassword"></result>
+        <result column="nick_name" property="nickName"></result>
+        <result column="locked" property="locked"></result>
+    </resultMap>
+
+<!--         User login(@Param("userName") String userName, @Param("password") String password);-->
+    <select id="login" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_list"></include>
+        from tb_admin_user
+        where login_user_name = #{userName} and login_password = #{password} and locked = 0
+    </select>
+
+    <!--  使用resultMap自定义映射处理  -->
+    <!--
+        <resultMap id="empResultMap" type="Emp">
+            <id column="emp_id" property="empId"></id>
+            <result column="emp_name" property="empName"></result>
+            <result column="age" property="age"></result>
+            <result column="gender" property="gender"></result>
+        </resultMap>
+    
+        <select id="getEmpById" resultMap="empResultMap">
+            select * from t_emp where emp_id = #{empId}
+        </select>
+       -->
+
+</mapper>

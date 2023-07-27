@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--保证与mapper接口的全类名一致-->
+<mapper namespace="com.gz.myblog.mapper.commentMapper">
+
+<!--    int getTotalComments(Map map);-->
+    <select id="getTotalComments" resultType="int">
+        select count(*)
+        from tb_blog_comment
+        where is_deleted=0
+        <if test="blogId!=null">
+            AND blog_id = #{blogId}
+        </if>
+        <if test="commentStatus!=null">
+            AND comment_status = #{commentStatus}
+        </if>
+    </select>
+
+    <!--  使用resultMap自定义映射处理  -->
+    <!--
+        <resultMap id="empResultMap" type="Emp">
+            <id column="emp_id" property="empId"></id>
+            <result column="emp_name" property="empName"></result>
+            <result column="age" property="age"></result>
+            <result column="gender" property="gender"></result>
+        </resultMap>
+    
+        <select id="getEmpById" resultMap="empResultMap">
+            select * from t_emp where emp_id = #{empId}
+        </select>
+       -->
+
+</mapper>
