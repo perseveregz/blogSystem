@@ -6,6 +6,35 @@
 <!--保证与mapper接口的全类名一致-->
 <mapper namespace="com.gz.myblog.mapper.blogMapper">
 
+    <resultMap id="BaseResultMap" type="com.gz.myblog.pojo.Blog">
+        <id column="blog_id" property="blogId" />
+        <result column="blog_title" property="blogTitle"/>
+        <result column="blog_sub_url" jdbcType="VARCHAR" property="blogSubUrl"/>
+        <result column="blog_cover_image" jdbcType="VARCHAR" property="blogCoverImage"/>
+        <result column="blog_category_id" jdbcType="INTEGER" property="blogCategoryId"/>
+        <result column="blog_category_name" jdbcType="VARCHAR" property="blogCategoryName"/>
+        <result column="blog_tags" jdbcType="VARCHAR" property="blogTags"/>
+        <result column="blog_status" jdbcType="TINYINT" property="blogStatus"/>
+        <result column="blog_views" jdbcType="BIGINT" property="blogViews"/>
+        <result column="enable_comment" jdbcType="TINYINT" property="enableComment"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <resultMap extends="BaseResultMap" id="ResultMapWithBlogs" type="com.gz.myblog.pojo.Blog">
+        <result column="blog_content" property="blogContent" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id, blog_category_name,
+        blog_tags, blog_status, blog_views, enable_comment, is_deleted, create_time, update_time
+    </sql>
+
+    <sql id="Blog_Column_List">
+        blog_content
+    </sql>
+
 <!--    int getTotalBlogs(PageQueryUtil pageQueryUtil);-->
     <select id="getTotalBlogs" parameterType="map" resultType="int">
         select count(*) from tb_blog
@@ -20,6 +49,64 @@
             AND blog_category_id = #{blogCategoryId}
         </if>
     </select>
+
+<!--         Blog getBlogById(Integer blogId);-->
+    <select id="getBlogById" resultType="integer" resultMap="ResultMapWithBlogs">
+        select
+        <include refid="Base_Column_List"></include>,<include refid="Blog_Column_List"></include>
+        from tb_blog
+        where blog_id = #{blogId} and is_deleted = 0;
+    </select>
+
+<!--         int updateByPrimaryKey(Blog blogForUpdate);-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.gz.myblog.pojo.Blog">
+        update tb_blog
+        <set>
+            <if test="blogTitle != null">
+                blog_title = #{blogTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="blogSubUrl != null">
+                blog_sub_url = #{blogSubUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="blogCoverImage != null">
+                blog_cover_image = #{blogCoverImage,jdbcType=VARCHAR},
+            </if>
+            <if test="blogContent != null">
+                blog_content = #{blogContent,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="blogCategoryId != null">
+                blog_category_id = #{blogCategoryId,jdbcType=INTEGER},
+            </if>
+            <if test="blogCategoryName != null">
+                blog_category_name = #{blogCategoryName,jdbcType=VARCHAR},
+            </if>
+            <if test="blogTags != null">
+                blog_tags = #{blogTags,jdbcType=VARCHAR},
+            </if>
+            <if test="blogStatus != null">
+                blog_status = #{blogStatus,jdbcType=TINYINT},
+            </if>
+            <if test="blogViews != null">
+                blog_views = #{blogViews,jdbcType=BIGINT},
+            </if>
+            <if test="enableComment != null">
+                enable_comment = #{enableComment,jdbcType=TINYINT},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="blogContent != null">
+                blog_content = #{blogContent,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where blog_id = #{blogId,jdbcType=BIGINT}
+    </update>
 
     <!--  使用resultMap自定义映射处理  -->
     <!--

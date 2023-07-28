@@ -1,6 +1,9 @@
 package com.gz.myblog.service;
 
+import com.gz.myblog.pojo.BlogCategory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Auther:Mr.Guo
@@ -10,4 +13,6 @@ import org.springframework.stereotype.Service;
 
 public interface categoryService {
     int getTotalCategories();
+
+    List<BlogCategory> getAllCategories();
 }

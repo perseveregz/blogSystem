@@ -1,7 +1,10 @@
 package com.gz.myblog.mapper;
 
+import com.gz.myblog.pojo.BlogTag;
 import com.gz.myblog.util.PageQueryUtil;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
 
 /**
  * @Auther:Mr.Guo
@@ -13,4 +16,9 @@ import org.springframework.stereotype.Repository;
 public interface tagMapper {
 
     int getTotalTags(PageQueryUtil pageQueryUtil);
+
+    BlogTag getByTagName(String tag);
+
+    int batchInsertBlogTag(ArrayList<BlogTag> tagListForInsert);
 }
+

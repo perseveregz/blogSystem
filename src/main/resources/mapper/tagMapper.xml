@@ -5,7 +5,23 @@
 
 <!--保证与mapper接口的全类名一致-->
 <mapper namespace="com.gz.myblog.mapper.tagMapper">
+    <resultMap id="BaseResultMap" type="com.gz.myblog.pojo.BlogTag">
+        <id column="tag_id" property="tagId"></id>
+        <result column="tag_name" property="tagName"></result>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    
+    <resultMap id="BaseCountResultMap" type="com.gz.myblog.pojo.BlogTagCount">
+        <id column="tag_id" property="tagId" />
+        <result column="tag_count" property="tagCount"></result>
+        <result column="tag_name" property="tagName" />
+    </resultMap>
 
+    <sql id="Base_Column_List">
+        tag_id,tag_name,is_deleted,create_time
+    </sql>
+    
 <!--    int getTotalTags(PageQueryUtil pageQueryUtil);-->
     <select id="getTotalTags" parameterType="map" resultType="int">
         select count(*)
@@ -13,6 +29,22 @@
         where is_deleted=0
     </select>
 
+<!--        BlogTag getByTagName(String tag);-->
+    <select id="getByTagName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from tb_blog_tag
+        where tag_name = #{tag} and is_deleted = 0
+    </select>
+
+<!--    int batchInsertBlogTag(ArrayList<BlogTag> tagListForInsert);-->
+    <insert id="batchInsertBlogTag" useGeneratedKeys="true" keyProperty="tagId">
+        INSERT into tb_blog_tag(tag_name)
+        values
+        <foreach collection="tagListForInsert" item="item" separator=",">
+            (#{item.tagName})
+        </foreach>
+    </insert>
     <!--  使用resultMap自定义映射处理  -->
     <!--
         <resultMap id="empResultMap" type="Emp">
